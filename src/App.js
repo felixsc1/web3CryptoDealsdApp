@@ -37,10 +37,10 @@ function App() {
   }
 
   const handleCreateDeal = async (dealData) => {
-    console.log(address)
+    const priceInWei = web3.utils.toWei(dealData.price, 'ether') // user can enter price in 1$ units
     try {
       await mpContract.methods.createNewDeal(
-          dealData.sender, dealData.receiver, dealData.price, dealData.token, dealData.date
+          dealData.sender, dealData.receiver, priceInWei, dealData.token, dealData.date
       ).send({
           from: address,
           value: 0,
