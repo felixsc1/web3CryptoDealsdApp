@@ -1,7 +1,8 @@
 import { React, useState } from 'react';
-import { Input, Stack, Container, Button, Heading} from '@chakra-ui/react'
+import { Input, Stack, Button, Box, Center, Heading, FormControl, FormLabel} from '@chakra-ui/react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import "./css/style.css"
 
 export default function CreateDealComponent({handleCreateDeal}) {
 
@@ -26,32 +27,47 @@ export default function CreateDealComponent({handleCreateDeal}) {
 
     function handleDate(event) {
         // solidity expects unix timestamp: https://stackoverflow.com/questions/11893083/convert-normal-date-to-unix-timestamp
-        const unixtime = parseInt((new Date(event).getTime() / 1000).toFixed(0))
+        // but to display date on timepicker we have to store javascript time object for now...
         setDealData(prevData => {
             return {
                 ...prevData,
-                date: unixtime
+                date: event
             }
         })
     }
 
     return (
-        <Container bg='gray.200'>
-            <Stack spacing={3}>
-                <Heading>Create New Deal</Heading>
-                <Input placeholder='sender address' size='sm' onChange={handleChange} name="sender" />
-                <Input placeholder='receiver address' size='sm' onChange={handleChange} name="receiver" />
-                <Input placeholder='price in USD' size='sm' onChange={handleChange} name="price" />
-                <Input placeholder='Token symbol' size='sm' onChange={handleChange} name="token" />
-                {/* <Input placeholder='Due date' size='sm' onChange={handleChange} name="date" /> */}
-                <DatePicker 
-                    selected={dealData.date} 
-                    onChange={handleDate} 
-                    dateFormat='dd/MM/yyyy'
-                />
-                <Button onClick={ () => handleCreateDeal(dealData)}>Submit</Button>
-            </Stack>
-        </Container>
+        <Center py={6}>
+        <Box
+        padding={'50px'}
+        maxW={'700px'}
+        w={'full'}
+        boxShadow={'2xl'}
+        rounded={'lg'}>
+                <Stack spacing={3}>
+                    <Heading>Create New Deal</Heading>
+                    <FormControl>
+                        <FormLabel htmlFor='sender'>sender address</FormLabel>
+                        <Input type="text" variant='filled' placeholder='sender address (0x....)' size='sm' onChange={handleChange} name="sender" />
+                        <FormLabel htmlFor='receiver'>receiver address</FormLabel>
+                        <Input type="text" variant='filled' placeholder='receiver address (0x....)' size='sm' onChange={handleChange} name="receiver" />
+                        <FormLabel htmlFor='price'>price in USD</FormLabel>
+                        <Input type="text" variant='filled' placeholder='price in USD' size='sm' onChange={handleChange} name="price" />
+                        <FormLabel htmlFor='token'>token symbol</FormLabel>
+                        <Input type="text" variant='filled' placeholder='e.g. "ETH"' size='sm' onChange={handleChange} name="token" />
+                        <FormLabel htmlFor='date'>Date for Payment</FormLabel>
+                        <DatePicker
+                            name='date' 
+                            selected={dealData.date} 
+                            onChange={handleDate} 
+                            dateFormat='dd/MM/yyyy'
+                            placeholderText='pick a date'
+                        />
+                    </FormControl>
+                    <Button onClick={ () => handleCreateDeal(dealData)}>Submit</Button>
+                </Stack>
+                </Box>
+                </Center>
     )
 }
 
